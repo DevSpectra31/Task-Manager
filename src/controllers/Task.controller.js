@@ -54,7 +54,12 @@ const updateTask=async(req,res)=>{
    const task=await Task.findOneAndUpdate(
      {
        _id:req.params.id,
-       owner:req.user_.id,
+       owner:req.user._id,
+     },
+     req.body,
+     {
+      new : true,
+      runValidators:true,
      }
    )
    if(!task){
@@ -64,7 +69,6 @@ const updateTask=async(req,res)=>{
    }
    res.status(201).json(task);
  } catch (error) {
-  console.error("not able to fetch");
   res.status(500).json({message:"not able update task"});
  }
 }
@@ -74,7 +78,7 @@ const deleteTask=async(req,res)=>{
     const task=await Task.findOneAndDelete(
       {
         _id:req.params.id,
-        owner:req.user_.id,
+        owner:req.user._id,
       }
     )
     if(!task){
