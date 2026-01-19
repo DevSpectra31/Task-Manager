@@ -6,6 +6,9 @@ const CreateTask=async(req,res)=>{
           ... req.body,
           owner:req.user._id,
       })
+      if(!req.body.title){
+        return res.status(401).json({message:"title is required for task creation"})
+      }
       res.status(201).json(task);
       res.json({message:"Task created successfully"});
       
@@ -19,14 +22,36 @@ const CreateTask=async(req,res)=>{
 //get all tasks
 const getalltasks=async(req,res)=>{
   try {
-    const tasks=await Task.find({owner:req.user._id});
-    res.status(201).json(tasks);
-    res.json({message:"fetched all tasks successfully"});
+    const match={}
+    const sort={}
+    //filtering
+    if(req.query.completed){
+      match.completed = req.query.completed === 'true';
+    }
+    //sorting
+    if(req.query.sortBy){
+      const parts=req.query.sortBy.split(':');
+      sort[parts[0]]=parts[1] === 'desc' ? -1 : 1
+    }
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+  
+  
+    const tasks = await Task.find({ owner: req.user._id, ...match })
+  .limit(limit)
+  .skip(skip)
+  .sort(sort);
+  
+  
+  res.json({
+  page,
+  limit,
+  count: tasks.length,
+  tasks
+  });
   } catch (error) {
-    console.error("Task not found");
-    return res.status(500).json({
-      message:"something went wrong while fetching the all the tasks"
-    })
+    return res.status(401).json({message:"something went wrong"});
   }
 }
 //get a single task

@@ -4,6 +4,15 @@ const registerUser=async(req,res)=>{
    try {
     console.log("Req.body : ",req.body)
      const {username,email,password}=req.body;
+     if (password.length < 6) {
+  return res.status(400).json({ message: 'Password must be at least 6 characters' });
+}
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailRegex.test(email)) {
+  return res.status(400).json({ message: 'Invalid email format' });
+}
+
      if(!username || !email || !password){
          return res.status(404).json({message:"All fileds are required"});
      }
