@@ -1,9 +1,15 @@
-class ApiResponse{
-    constructor(statusCode,  data ,message="Success"){
+class ApiError extends Error{
+    constructor(
+    statusCode,
+    message ="Something went wrong" ,
+    errors=[]
+    ){
+        super(message)
         this.statusCode=statusCode
+        this.data=null
         this.message=message
-        this.data=data
-        this.success=statusCode<400
+        this.success=false
+        this.erros=errors
     }
 }
-export {ApiResponse}
+export {ApiError}

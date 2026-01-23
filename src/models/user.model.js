@@ -10,13 +10,6 @@ const userschema=new Schema(
             trim:true,
             index:true,
         },
-        email:{
-            type:String,
-            required:true,
-            unique:true,
-            index:true,
-            lowercase:true,
-        },
         password:{
             type:String,
             required:true,
