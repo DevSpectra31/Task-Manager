@@ -28,23 +28,23 @@ userschema.pre('save', async function() {
 userschema.methods.isPasswordCorrect = async function(password) {
     return await bcrypt.compare(password, this.password);
 }
-userschema.methods.generateAccessToken=async function(){
+userschema.methods.generateAccessToken=function(){
     jwt.sign(
         {
             _id:this._id,
             username:this.username,
         },
-        process.env.ACCESS_TOKEN,
+        process.env.ACCESS_TOKEN_SECRET,
         {expiresIn:process.env.ACCESS_TOKEN_EXPIERY}
     )
 }
-userschema.methods.generateRefreshToken=async function(){
+userschema.methods.generateRefreshToken=function(){
     jwt.sign(
         {
             _id:this._id,
             username:this.username,
         },
-        process.env.REFRESH_TOKEN,
+        process.env.REFRESH_TOKEN_SECRET,
         {expiresIn:process.env.REFRESH_TOKEN_EXPIERY}
     )
 }

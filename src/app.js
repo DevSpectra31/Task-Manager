@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 const app = express();
 //middlewares
-app.use(express.json("limit : 10 kb"));
+app.use(express.json());
 app.use(cors);
 app.use(helmet());
 app.use(express.urlencoded());
@@ -15,9 +15,9 @@ import Taskroute from "./routes/Task.routes.js";
 app.get("/", (req, res) => {
     res.send("Task manager api is running")
 });
+//error middleware
+app.use(Error_middleware)
 //use routes
 app.use("/api/v1/users",RegisterRoute)
 app.use("/api/v1/users",Taskroute);
-//error middleware
-app.use(Error_middleware)
 export default app;

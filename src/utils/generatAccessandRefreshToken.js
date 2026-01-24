@@ -3,12 +3,13 @@ import { ApiError } from "./ApiError.js";
 const generateAccessAndRefreshToken=async(userId)=>{
    try {
      console.log("USER ID : ",userId);
-     const user=await User.findOne(userId);
+     const user=await User.findById(userId)
      if(!user){
          throw new ApiError (400,"user doesn't exist");
      }
      const accesstoken=await user.generateAccessToken();
      const refreshtoken=await user.generateRefreshToken();
+     user.accesstoken=accesstoken;
      user.refreshtoken=refreshtoken;
      await user.save({validateBeforeSave:false});
      return {accesstoken,refreshtoken};
